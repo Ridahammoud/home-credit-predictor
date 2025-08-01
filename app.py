@@ -48,7 +48,7 @@ with tab1:
                     st.warning("Veuillez entrer un identifiant numérique valide.")
 
             st.success("✅ Prédictions effectuées avec succès !")
-            st.dataframe(results)
+            st.dataframe(results.head(10))
 
             # Téléchargement des résultats
             csv = results.to_csv(index=False).encode('utf-8')
