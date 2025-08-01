@@ -3,7 +3,7 @@ import pandas as pd
 from predict_model import HomeCreditPredictor
 
 # Initialisation du modèle
-predictor = HomeCreditPredictor("models/final_lgb_model.pkl")
+predictor = HomeCreditPredictor("model/final_lgb_model.pkl")
 
 # Titre de l'application
 st.title("🏦 Prédiction du risque de défaut - Home Credit")
