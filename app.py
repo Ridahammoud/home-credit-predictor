@@ -26,8 +26,26 @@ with tab1:
             st.write("✅ Aperçu des données chargées :")
             st.dataframe(df.head())
 
+            # Récupérer SK_ID_CURR si présent
+            if "SK_ID_CURR" in df.columns:
+                ids = df["SK_ID_CURR"]
+            else:
+                ids = pd.Series(range(len(df)), name="SK_ID_CURR")
+
             # Prédiction
             results = predictor.predict_batch(df)
+            results.insert(0, "SK_ID_CURR", ids)
+
+            # Barre de recherche
+            search_id = st.text_input("🔎 Rechercher un client par SK_ID_CURR :", "")
+            results_filtered = results.copy()
+
+            if search_id:
+                try:
+                    search_id = int(search_id)
+                    results_filtered = results_filtered[results_filtered["SK_ID_CURR"] == search_id]
+            except:
+                st.warning("Veuillez entrer un identifiant numérique valide.")
 
             st.success("✅ Prédictions effectuées avec succès !")
             st.dataframe(results.head())
