@@ -3,7 +3,7 @@ import joblib
 import os
 
 class HomeCreditPredictor:
-    def __init__(self, model_path="models/final_lgb_model.pkl"):
+    def __init__(self, model_path="model/final_lgb_model.pkl"):
         # Vérifie l'existence du fichier modèle
         if not os.path.exists(model_path):
             raise FileNotFoundError("⚠️ Modèle introuvable. Assurez-vous que 'final_lgb_model.pkl' est dans le dossier /models")
