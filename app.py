@@ -44,8 +44,8 @@ with tab1:
                 try:
                     search_id = int(search_id)
                     results_filtered = results_filtered[results_filtered["SK_ID_CURR"] == search_id]
-            except:
-                st.warning("Veuillez entrer un identifiant numérique valide.")
+                except:
+                    st.warning("Veuillez entrer un identifiant numérique valide.")
 
             st.success("✅ Prédictions effectuées avec succès !")
             st.dataframe(results.head())
