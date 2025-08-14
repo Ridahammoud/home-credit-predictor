@@ -12,28 +12,25 @@ class HomeCreditPredictor:
         
         # Charger le modèle
         self.model = joblib.load(model_path)
-        
         # Charger la liste des colonnes importantes
-        self.feature_names = pd.read_csv(features_path)["feature"].tolist()
-        # Retirer SK_ID_CURR si présent
-        self.feature_names = [f for f in self.feature_names if f != "SK_ID_CURR"]
+        feature_importances = pd.read_csv(features_path)
+        self.feature_names = [f for f in feature_importances["feature"].tolist() if f != "SK_ID_CURR"]
 
     def preprocess(self, df):
-        """Prépare les données comme à l'entraînement (One-Hot Encoding + alignement)."""
-        # Supprimer l'ID si présent
-        if "SK_ID_CURR" in df.columns:
-            df = df.drop(columns=["SK_ID_CURR"])
+        """Prépare les données comme à l'entraînement (One-Hot Encoding + alignement sur features importantes)."""
+        if 'SK_ID_CURR' in df.columns:
+            df = df.drop(columns=['SK_ID_CURR'])
 
         # One-Hot Encoding
         df_encoded = pd.get_dummies(df)
 
-        # Réaligner sur les colonnes d'entraînement
+        # Réalignement exact avec les colonnes d'entraînement (important_features)
         df_aligned = df_encoded.reindex(columns=self.feature_names, fill_value=0)
 
-        # Conversion en float
+        # Convertir en float
         df_aligned = df_aligned.astype(float)
 
-        return df_aligned
+    return df_aligned
 
     def predict_batch(self, df, return_proba=True):
         """Prédiction en batch (plusieurs lignes)."""
