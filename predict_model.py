@@ -1,49 +1,51 @@
 import pandas as pd
 import joblib
+import os
 
 class HomeCreditPredictor:
-    def __init__(self, model_path: str = "model/final_lgb_model.pkl"):
-        """
-        Classe utilitaire pour charger un modèle LightGBM entraîné et effectuer des prédictions.
-        """
-        self.model_path = model_path
-        self.model = self._load_model()
+    def __init__(self, model_path="models/final_lgb_model.pkl", features_path="feature_importances.csv"):
+        # Vérification des fichiers
+        if not os.path.exists(model_path):
+            raise FileNotFoundError(f"⚠️ Modèle introuvable : {model_path}")
+        if not os.path.exists(features_path):
+            raise FileNotFoundError(f"⚠️ Fichier de features introuvable : {features_path}")
 
-    def _load_model(self):
-        """Charge le modèle sauvegardé."""
-        try:
-            return joblib.load(self.model_path)
-        except Exception as e:
-            raise FileNotFoundError(f"Erreur lors du chargement du modèle : {e}")
+        # Charger le modèle
+        self.model = joblib.load(model_path)
 
-    def predict_batch(self, df: pd.DataFrame):
-        """
-        Prédit la variable TARGET et la probabilité pour un DataFrame complet.
+        # Charger les features importantes et exclure SK_ID_CURR
+        feature_importances = pd.read_csv(features_path)
+        self.feature_names = [f for f in feature_importances["feature"].tolist() if f != "SK_ID_CURR"]
 
-        :param df: DataFrame contenant les features. Si 'SK_ID_CURR' est présent, il sera conservé.
-        :return: DataFrame avec SK_ID_CURR, TARGET_PRED et PROBA
-        """
-        ids = df["SK_ID_CURR"] if "SK_ID_CURR" in df.columns else pd.Series(range(len(df)))
-        features = df.drop(columns=["SK_ID_CURR"], errors="ignore")
+    def preprocess(self, df):
+        """Prépare les données comme à l'entraînement (One-Hot Encoding + alignement sur features importantes)."""
+        # Retirer SK_ID_CURR si présent
+        if 'SK_ID_CURR' in df.columns:
+            df = df.drop(columns=['SK_ID_CURR'])
 
+        # Encodage One-Hot
+        df_encoded = pd.get_dummies(df)
+
+        # Réalignement exact avec les colonnes d'entraînement
+        df_aligned = df_encoded.reindex(columns=self.feature_names, fill_value=0)
+
+        # Convertir en float
+        return df_aligned.astype(float)
+
+    def predict_batch(self, df):
+        """Prédiction pour plusieurs clients."""
+        features = self.preprocess(df)
         probas = self.model.predict_proba(features)[:, 1]
-        preds = self.model.predict(features)
-
-        results = pd.DataFrame({
-            "SK_ID_CURR": ids,
-            "TARGET_PRED": preds,
-            "PROBA": probas
+        predictions = (probas >= 0.5).astype(int)
+        return pd.DataFrame({
+            "TARGET_PRED": predictions,
+            "PROBA_DEFAULT": probas
         })
-        return results
 
-    def predict_single(self, features_dict: dict):
-        """
-        Prédit pour un seul individu à partir d'un dictionnaire de features.
-
-        :param features_dict: dictionnaire {feature: valeur}
-        :return: tuple (prediction, probabilité)
-        """
-        df_input = pd.DataFrame([features_dict])
-        proba = self.model.predict_proba(df_input)[:, 1][0]
-        pred = self.model.predict(df_input)[0]
-        return int(pred), float(proba)
+    def predict_single(self, input_data):
+        """Prédiction pour un seul client."""
+        if isinstance(input_data, dict):
+            df = pd.DataFrame([input_data])
+        else:
+            df = input_data
+        return self.predict_batch(df).iloc[0]
