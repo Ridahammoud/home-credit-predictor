@@ -3,7 +3,7 @@ import joblib
 import os
 
 class HomeCreditPredictor:
-    def __init__(self, model_path="models/final_lgb_model.pkl", features_path="feature_importances.csv"):
+    def __init__(self, model_path="models/final_lgb_model_2.pkl", features_path="feature_importances.csv"):
         # Vérification des fichiers
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"⚠️ Modèle introuvable : {model_path}")
