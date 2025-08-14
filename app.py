@@ -2,8 +2,11 @@ import streamlit as st
 import pandas as pd
 from predict_model import HomeCreditPredictor
 
-# Initialisation du modèle
-predictor = HomeCreditPredictor("model/final_lgb_model.pkl")
+# Initialisation du modèle avec features importantes
+predictor = HomeCreditPredictor(
+    model_path="models/final_lgb_model_2.pkl",
+    features_path="feature_importances.csv"
+)
 
 # Titre de l'application
 st.title("🏦 Prédiction du risque de défaut - Home Credit")
@@ -15,18 +18,18 @@ tab1, tab2 = st.tabs(["📂 Prédictions sur fichier CSV", "🔮 Prédiction man
 # 1️⃣ Prédiction en batch (CSV)
 # ============================
 with tab1:
-    st.header("📂 Charger un fichier CSV (ex: app_test.csv)")
+    st.header("📂 Charger un fichier CSV (ex: application_test.csv)")
     uploaded_file = st.file_uploader("Déposez ici votre fichier CSV", type=["csv"])
 
     if uploaded_file is not None:
         try:
-            # Lecture du fichier CSV
+            # Lecture du fichier CSV brut
             df = pd.read_csv(uploaded_file)
 
             st.write("✅ Aperçu des données chargées :")
             st.dataframe(df.head())
 
-            # Récupérer SK_ID_CURR si présent
+            # Sauvegarder SK_ID_CURR s'il est présent
             if "SK_ID_CURR" in df.columns:
                 ids = df["SK_ID_CURR"]
             else:
@@ -36,7 +39,7 @@ with tab1:
             results = predictor.predict_batch(df)
             results.insert(0, "SK_ID_CURR", ids)
 
-            # Barre de recherche
+            # Barre de recherche par ID
             search_id = st.text_input("🔎 Rechercher un client par SK_ID_CURR :", "")
             results_filtered = results.copy()
 
@@ -44,11 +47,11 @@ with tab1:
                 try:
                     search_id = int(search_id)
                     results_filtered = results_filtered[results_filtered["SK_ID_CURR"] == search_id]
-                except:
+                except ValueError:
                     st.warning("Veuillez entrer un identifiant numérique valide.")
 
             st.success("✅ Prédictions effectuées avec succès !")
-            st.dataframe(results.head(10))
+            st.dataframe(results_filtered.head(10))
 
             # Téléchargement des résultats
             csv = results.to_csv(index=False).encode('utf-8')
@@ -70,9 +73,8 @@ with tab2:
 
     st.info("ℹ️ Renseignez uniquement quelques champs pour tester la prédiction (les colonnes manquantes seront mises à zéro).")
 
-    # Exemple minimal : l'utilisateur saisit quelques variables (celles présentes dans ton dataset)
+    # Exemple minimal : saisie utilisateur
     input_data = {}
-
     input_data["EXT_SOURCE_1"] = st.number_input("EXT_SOURCE_1", min_value=0.0, max_value=1.0, step=0.01)
     input_data["EXT_SOURCE_2"] = st.number_input("EXT_SOURCE_2", min_value=0.0, max_value=1.0, step=0.01)
     input_data["EXT_SOURCE_3"] = st.number_input("EXT_SOURCE_3", min_value=0.0, max_value=1.0, step=0.01)
