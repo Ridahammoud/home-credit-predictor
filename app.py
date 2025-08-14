@@ -4,7 +4,7 @@ from predict_model import HomeCreditPredictor
 
 # Initialisation du modèle avec features importantes
 predictor = HomeCreditPredictor(
-    model_path="models/final_lgb_model_2.pkl",
+    model_path="model/final_lgb_model.pkl",
     features_path="feature_importances.csv"
 )
 
