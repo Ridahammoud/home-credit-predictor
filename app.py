@@ -66,6 +66,10 @@ with tab1:
         except Exception as e:
             st.error(f"❌ Erreur lors du traitement du fichier : {e}")
 
+    st.header("📂 Les Features Importances ")
+    fi = pd.read_csv('feature_importances.csv')
+    st.dataframe(fi.head(10))
+
 # ============================
 # 2️⃣ Prédiction manuelle
 # ============================
