@@ -4,7 +4,7 @@ from predict_model import HomeCreditPredictor
 
 # Initialisation du modèle avec les features importantes
 predictor = HomeCreditPredictor(
-    model_path="model/final_lgb_model.pkl",
+    model_path="model/final_lgb_model_2.pkl",
     features_path="feature_importances.csv"
 )
 
@@ -36,7 +36,8 @@ with tab1:
                 ids = pd.Series(range(len(df)), name="SK_ID_CURR")
 
             # Prédictions
-            results = predictor.predict_batch(df, predict_disable_shape_check=True)
+            results = predictor.predict_batch(df)
+            #predict_disable_shape_check=True
             results.insert(0, "SK_ID_CURR", ids)
 
             # Barre de recherche
