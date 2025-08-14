@@ -83,7 +83,7 @@ with tab2:
 
     if st.button("🔎 Prédire le risque"):
         try:
-            result = predictor.predict_single(input_data, predict_disable_shape_check=True)
+            result = predictor.predict_single(input_data)
             st.success(f"✅ Prédiction effectuée : **{'Défaut' if result['TARGET_PRED']==1 else 'Pas de Défaut'}**")
             st.info(f"📊 Probabilité de défaut : **{result['PROBA_DEFAULT']:.2%}**")
         except Exception as e:
