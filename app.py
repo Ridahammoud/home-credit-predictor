@@ -36,7 +36,7 @@ with tab1:
                 ids = pd.Series(range(len(df)), name="SK_ID_CURR")
 
             # Prédictions
-            results = predictor.predict_batch(df)
+            results = predictor.predict_batch(df, predict_disable_shape_check=True)
             results.insert(0, "SK_ID_CURR", ids)
 
             # Barre de recherche
@@ -82,7 +82,7 @@ with tab2:
 
     if st.button("🔎 Prédire le risque"):
         try:
-            result = predictor.predict_single(input_data)
+            result = predictor.predict_single(input_data, predict_disable_shape_check=True)
             st.success(f"✅ Prédiction effectuée : **{'Défaut' if result['TARGET_PRED']==1 else 'Pas de Défaut'}**")
             st.info(f"📊 Probabilité de défaut : **{result['PROBA_DEFAULT']:.2%}**")
         except Exception as e:
