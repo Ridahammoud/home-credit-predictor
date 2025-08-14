@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from predict_model import HomeCreditPredictor
 
-# Initialisation du modèle avec features importantes
+# Initialisation du modèle avec les features importantes
 predictor = HomeCreditPredictor(
     model_path="model/final_lgb_model.pkl",
     features_path="feature_importances.csv"
@@ -18,28 +18,28 @@ tab1, tab2 = st.tabs(["📂 Prédictions sur fichier CSV", "🔮 Prédiction man
 # 1️⃣ Prédiction en batch (CSV)
 # ============================
 with tab1:
-    st.header("📂 Charger un fichier CSV (ex: application_test.csv)")
+    st.header("📂 Charger un fichier CSV (ex: app_test.csv)")
     uploaded_file = st.file_uploader("Déposez ici votre fichier CSV", type=["csv"])
 
     if uploaded_file is not None:
         try:
-            # Lecture du fichier CSV brut
+            # Lecture du CSV
             df = pd.read_csv(uploaded_file)
 
             st.write("✅ Aperçu des données chargées :")
             st.dataframe(df.head())
 
-            # Sauvegarder SK_ID_CURR s'il est présent
+            # Récupérer SK_ID_CURR si présent
             if "SK_ID_CURR" in df.columns:
                 ids = df["SK_ID_CURR"]
             else:
                 ids = pd.Series(range(len(df)), name="SK_ID_CURR")
 
-            # Prédiction
+            # Prédictions
             results = predictor.predict_batch(df)
             results.insert(0, "SK_ID_CURR", ids)
 
-            # Barre de recherche par ID
+            # Barre de recherche
             search_id = st.text_input("🔎 Rechercher un client par SK_ID_CURR :", "")
             results_filtered = results.copy()
 
@@ -47,7 +47,7 @@ with tab1:
                 try:
                     search_id = int(search_id)
                     results_filtered = results_filtered[results_filtered["SK_ID_CURR"] == search_id]
-                except ValueError:
+                except:
                     st.warning("Veuillez entrer un identifiant numérique valide.")
 
             st.success("✅ Prédictions effectuées avec succès !")
@@ -70,10 +70,8 @@ with tab1:
 # ============================
 with tab2:
     st.header("🔮 Saisir manuellement les données client")
-
     st.info("ℹ️ Renseignez uniquement quelques champs pour tester la prédiction (les colonnes manquantes seront mises à zéro).")
 
-    # Exemple minimal : saisie utilisateur
     input_data = {}
     input_data["EXT_SOURCE_1"] = st.number_input("EXT_SOURCE_1", min_value=0.0, max_value=1.0, step=0.01)
     input_data["EXT_SOURCE_2"] = st.number_input("EXT_SOURCE_2", min_value=0.0, max_value=1.0, step=0.01)
