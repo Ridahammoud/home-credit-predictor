@@ -96,7 +96,10 @@ with tab2:
         try:
             result = predictor.predict_single(input_data)
             proba_default = result['PROBA_DEFAULT']
-            seuil = 0.5 # seuil à ajuster selon le modèle
+            # Seuil choisi par l'utilisateur
+            seuil = st.slider("⚖️ Choisissez le seuil de probabilité de défaut %",
+                              min_value=0, max_value=100, value=50, step=1) / 100.0
+
             # Résultat binaire
             decision = "❌ Prêt Refusé" if proba_default >= seuil else "✅ Prêt Accepté"
 
