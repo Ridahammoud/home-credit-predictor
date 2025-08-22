@@ -100,15 +100,15 @@ with tab2:
             result = predictor.predict_single(input_data)
             proba_default = result['PROBA_DEFAULT']
 
-            st.info(f"📊 Probabilité de défaut : **{proba:.2%}** (seuil = {threshold:.0%})")
+            st.info(f"📊 Probabilité de défaut : **{proba_default:.2%}** (seuil = {threshold:.0%})")
 
             # Affichage avec comparaison au seuil
-            if proba >= threshold:
+            if proba_default >= threshold:
                 st.error("❌ Prêt refusé (risque trop élevé)")
-                st.progress(min(1.0, proba))  # barre proportionnelle
+                st.progress(min(1.0, proba_default))  # barre proportionnelle
             else:
                 st.success("✅ Prêt accepté")
-                st.progress(min(1.0, proba))  # même barre mais sous le seuil
+                st.progress(min(1.0, proba_default))  # même barre mais sous le seuil
 
             # Résultat binaire
             decision = "❌ Prêt Refusé" if proba_default >= threshold else "✅ Prêt Accepté"
