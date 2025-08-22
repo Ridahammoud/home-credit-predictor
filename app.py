@@ -8,6 +8,7 @@ predictor = HomeCreditPredictor(
     features_path="feature_importances.csv"
 )
 
+
 # Titre de l'application
 st.title("🏦 Prédiction du risque de défaut - Home Credit")
 
