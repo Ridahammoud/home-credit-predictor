@@ -38,22 +38,28 @@ with tab1:
 
             # Prédictions
             results = predictor.predict_batch(df)
-            #predict_disable_shape_check=True
             results.insert(0, "SK_ID_CURR", ids)
+
+            # Seuil choisi par l'utilisateur
+            seuil = st.slider("⚖️ Choisissez le seuil de probabilité de défaut %",
+                              min_value=0, max_value=100, value=50, step=1) / 100.0
+
+            # Filtrage des résultats supérieurs au seuil 
+            results_filtered = results[results["PROBA_DEFAULT"] >= seuil ]
 
             # Barre de recherche
             search_id = st.text_input("🔎 Rechercher un client par SK_ID_CURR :", "")
-            results_filtered = results.copy()
+            results_filtered_c = results_filtered.copy()
 
             if search_id:
                 try:
                     search_id = int(search_id)
-                    results_filtered = results_filtered[results_filtered["SK_ID_CURR"] == search_id]
+                    results_filtered_c = results_filtered_c[results_filtered_c["SK_ID_CURR"] == search_id]
                 except:
                     st.warning("Veuillez entrer un identifiant numérique valide.")
 
             st.success("✅ Prédictions effectuées avec succès !")
-            st.dataframe(results_filtered.head(10))
+            st.dataframe(results_filtered.head(20))
 
             # Téléchargement des résultats
             csv = results.to_csv(index=False).encode('utf-8')
