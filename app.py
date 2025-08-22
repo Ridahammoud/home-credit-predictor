@@ -88,6 +88,20 @@ with tab2:
     if st.button("🔎 Prédire le risque"):
         try:
             result = predictor.predict_single(input_data)
+            proba_default = result['PROBA_DEFAULT']
+            seuil = 0.5 # seuil à ajuster selon le modèle
+            # Résultat binaire
+            decision = "❌ Prêt Refusé" if proba_default >= seuil else "✅ Prêt Accepté"
+
+            # Barre de progression
+            st.progress(min(int(proba_default*100),100))
+
+            #indicateur visuel avec jauge
+            st.metric(
+                label="Score de risque en %",
+                value=f"{proba_default*100:.1f}%",
+                delta=f"{(proba_default-seuil)*100:.1f} vs seuil"
+            )
             st.success(f"✅ Prédiction effectuée : **{'Défaut' if result['TARGET_PRED']==1 else 'Pas de Défaut'}**")
             st.info(f"📊 Probabilité de défaut : **{result['PROBA_DEFAULT']:.2%}**")
         except Exception as e:
