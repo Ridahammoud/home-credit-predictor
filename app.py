@@ -92,16 +92,26 @@ with tab2:
     input_data["AMT_CREDIT"] = st.number_input("AMT_CREDIT", min_value=0.0, step=100.0)
     input_data["DAYS_BIRTH"] = st.number_input("DAYS_BIRTH (négatif)", value=-10000, step=1)
 
+    # Seuil choisi par l'utilisateur
+    threshold = st.slider("⚖️ Choisir le seuil de refus", 0.0, 1.0, 0.5, 0.01)
+
     if st.button("🔎 Prédire le risque"):
         try:
             result = predictor.predict_single(input_data)
             proba_default = result['PROBA_DEFAULT']
-            # Seuil choisi par l'utilisateur
-            seuil = st.slider("⚖️ Choisissez le seuil de probabilité de défaut %",
-                              min_value=0, max_value=100, value=50, step=1) / 100.0
+
+            st.info(f"📊 Probabilité de défaut : **{proba:.2%}** (seuil = {threshold:.0%})")
+
+            # Affichage avec comparaison au seuil
+            if proba >= threshold:
+                st.error("❌ Prêt refusé (risque trop élevé)")
+                st.progress(min(1.0, proba))  # barre proportionnelle
+            else:
+                st.success("✅ Prêt accepté")
+                st.progress(min(1.0, proba))  # même barre mais sous le seuil
 
             # Résultat binaire
-            decision = "❌ Prêt Refusé" if proba_default >= seuil else "✅ Prêt Accepté"
+            decision = "❌ Prêt Refusé" if proba_default >= threshold else "✅ Prêt Accepté"
 
             # Barre de progression
             st.progress(min(int(proba_default*100),100))
@@ -110,7 +120,7 @@ with tab2:
             st.metric(
                 label="Score de risque en %",
                 value=f"{proba_default*100:.1f}%",
-                delta=f"{(proba_default-seuil)*100:.1f} vs seuil"
+                delta=f"{(proba_default-threshold)*100:.1f} vs seuil"
             )
             st.success(f"✅ Prédiction effectuée : **{'Défaut' if result['TARGET_PRED']==1 else 'Pas de Défaut'}**")
             st.info(f"📊 Probabilité de défaut : **{result['PROBA_DEFAULT']:.2%}**")
