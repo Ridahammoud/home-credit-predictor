@@ -85,9 +85,9 @@ with tab2:
     st.info("ℹ️ Renseignez uniquement quelques champs pour tester la prédiction (les colonnes manquantes seront mises à zéro).")
 
     input_data = {}
-    input_data["EXT_SOURCE_1"] = st.number_input("EXT_SOURCE_1", min_value=0.0, max_value=100000, step=0.01)
-    input_data["EXT_SOURCE_2"] = st.number_input("EXT_SOURCE_2", min_value=0.0, max_value=100000, step=0.01)
-    input_data["EXT_SOURCE_3"] = st.number_input("EXT_SOURCE_3", min_value=0.0, max_value=100000, step=0.01)
+    input_data["EXT_SOURCE_1"] = st.number_input("EXT_SOURCE_1", min_value=0.0, max_value=100000.0, step=0.01)
+    input_data["EXT_SOURCE_2"] = st.number_input("EXT_SOURCE_2", min_value=0.0, max_value=100000.0, step=0.01)
+    input_data["EXT_SOURCE_3"] = st.number_input("EXT_SOURCE_3", min_value=0.0, max_value=100000.0, step=0.01)
     input_data["AMT_INCOME_TOTAL"] = st.number_input("AMT_INCOME_TOTAL", min_value=0.0, step=100.0)
     input_data["AMT_CREDIT"] = st.number_input("AMT_CREDIT", min_value=0.0, step=100.0)
     input_data["DAYS_BIRTH"] = st.number_input("DAYS_BIRTH (négatif)", value=-10000, step=1)
