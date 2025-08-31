@@ -103,7 +103,7 @@ with tab2:
             st.info(f"📊 Probabilité de défaut : **{proba_default:.2%}** (seuil = {threshold:.0%})")
 
             # Affichage avec comparaison au seuil
-            if proba_default >= threshold:
+            if proba_default < threshold:
                 st.error("❌ Prêt refusé (risque trop élevé)")
                 st.progress(min(1.0, proba_default))  # barre proportionnelle
             else:
