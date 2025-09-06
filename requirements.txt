@@ -3,5 +3,5 @@ pandas
 joblib
 lightgbm
 numpy
-scikit-learn
+scikit-learn==1.4.2
 uvicorn
