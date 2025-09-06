@@ -4,3 +4,4 @@ joblib
 lightgbm
 numpy
 scikit-learn
+uvicorn
