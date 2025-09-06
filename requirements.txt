@@ -2,6 +2,6 @@ streamlit
 pandas
 joblib
 lightgbm
-numpy
 scikit-learn==1.4.2
 uvicorn
+numpy==2.2.2
