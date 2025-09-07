@@ -1,6 +1,7 @@
 # Flask et extensions
 Flask
 flask-cors
+gunicorn
 
 # Data et ML
 pandas
