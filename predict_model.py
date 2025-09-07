@@ -6,7 +6,7 @@ class HomeCreditPredictor:
     def __init__(
         self,
         model_path="models/final_lgb_model_f.pkl",
-        imputer_path="models/final_imputer.pkl",
+        imputer_path="models/final_imputer_f.pkl",
         features_path="feature_importances.csv"
     ):
         # Vérification des fichiers
