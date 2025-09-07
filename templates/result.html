@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Résultat prédiction</title>
+</head>
+<body>
+    <h1>Résultat prédiction individuelle</h1>
+    <p>Probabilité défaut: {{ result['PROBA_DEFAULT'] }}</p>
+    <p>Prédiction TARGET: {{ result.get('TARGET_PRED', 'N/A') }}</p>
+    {% if result.get('decision') %}
+    <p>Décision selon seuil: {{ result['decision'] }}</p>
+    {% endif %}
+    <a href="/">Retour</a>
+</body>
+</html>
