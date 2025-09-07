@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Résultat prédiction batch</title>
+</head>
+<body>
+    <h1>Résultats prédiction batch</h1>
+    <p>Lignes traitées: {{ result['n_input_rows'] }}</p>
+    <p>Prédictions retournées: {{ result['n_predictions'] }}</p>
+
+    <table border="1">
+        <thead>
+            <tr>
+                {% for col in result['columns'] %}
+                <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in result['predictions'] %}
+            <tr>
+                {% for col in result['columns'] %}
+                <td>{{ row[col] }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/">Retour</a>
+</body>
+</html>
