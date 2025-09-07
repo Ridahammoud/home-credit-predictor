@@ -68,7 +68,7 @@ def predict_batch_upload():
 
         # Envoyer le fichier à l'API
         with open(filepath, "rb") as f:
-            response = requests.post(f"{API_URL}/predict_batch", files={"file": f}, timeout=60)
+            response = requests.post(f"{API_URL}/predict_batch", files={"file": f}, timeout=600)
         if response.status_code != 200:
             flash(f"Erreur API: {response.text}", "danger")
             return redirect(url_for("index"))
