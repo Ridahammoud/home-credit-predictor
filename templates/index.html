@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home Credit Predictor</title>
+</head>
+<body>
+    <h1>Prédiction individuelle</h1>
+    <form action="/predict_single_form" method="post">
+        <label for="EXT_SOURCE_1">EXT_SOURCE_1:</label>
+        <input type="text" name="EXT_SOURCE_1" required><br>
+
+        <label for="AMT_CREDIT">AMT_CREDIT:</label>
+        <input type="text" name="AMT_CREDIT" required><br>
+
+        <!-- ajouter d'autres features ici -->
+
+        <button type="submit">Prédire</button>
+    </form>
+
+    <hr>
+
+    <h1>Prédiction batch (CSV)</h1>
+    <form action="/predict_batch_upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".csv" required>
+        <button type="submit">Envoyer</button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+          {% for category, message in messages %}
+            <li style="color: {% if category=='danger' %}red{% else %}green{% endif %}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</body>
+</html>
