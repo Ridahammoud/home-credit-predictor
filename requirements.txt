@@ -10,3 +10,4 @@ scikit-learn
 lightgbm
 imblearn
 joblib
+requests
