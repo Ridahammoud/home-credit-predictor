@@ -82,7 +82,7 @@ with tab2:
     input_data["AMT_GOODS_PRICE"] = st.number_input("AMT_GOODS_PRICE", min_value=0.0, max_value=1000000.0, step=100.0)
     input_data["DAYS_REGISTRATION"] = st.number_input("DAYS_REGISTRATION", min_value=0.0, max_value=1000000.0, step=100.0)
     input_data["AMT_INCOME_TOTAL"] = st.number_input("AMT_INCOME_TOTAL", min_value=0.0, max_value = 1000000.0, step=100.0)
-    input_data["CNT_CHILDREN"] = st.number_input("CNT_CHILDREN", min_value=0.0, max_value = 20, step = 1)
+    input_data["CNT_CHILDREN"] = st.number_input("CNT_CHILDREN", min_value=0.0, max_value = 20.0, step = 1.0)
 
     threshold = st.slider("⚖️ Choisir le seuil de refus", 0.0, 1.0, 0.5, 0.01)
 
