@@ -2,22 +2,20 @@ import streamlit as st
 import pandas as pd
 from predict_model import HomeCreditPredictor
 
-# ============================
 # Initialisation du prédicteur
-# ============================
+
 predictor = HomeCreditPredictor(
     model_path="models/final_lgb_model_f.pkl",
     imputer_path="models/final_imputer_f.pkl",
     features_path="feature_importances.csv"
 )
 
-st.title("🏦 Prédiction du risque de défaut - Home Credit")
+st.title("🏦 Dashboard de credit scoring - Projet 8")
 
 tab1, tab2 = st.tabs(["📂 Prédictions sur fichier CSV", "🔮 Prédiction manuelle"])
 
-# ----------------------------
-# 1️⃣ Prédiction batch (CSV)
-# ----------------------------
+# Page 1 : Prédiction batch (CSV)
+
 with tab1:
     st.header("📂 Charger un fichier CSV (ex: app_test.csv)")
     uploaded_file = st.file_uploader("Déposez ici votre fichier CSV", type=["csv"])
@@ -70,19 +68,21 @@ with tab1:
     fi = pd.read_csv('feature_importances.csv')
     st.dataframe(fi.head(10))
 
-# ----------------------------
-# 2️⃣ Prédiction manuelle
-# ----------------------------
+# Page 2 : Prédiction manuelle
+
 with tab2:
     st.header("🔮 Saisir manuellement les données client")
 
     input_data = {}
-    input_data["EXT_SOURCE_1"] = st.number_input("EXT_SOURCE_1", min_value=0.0, max_value=1.0, step=0.01)
-    input_data["EXT_SOURCE_2"] = st.number_input("EXT_SOURCE_2", min_value=0.0, max_value=1.0, step=0.01)
-    input_data["EXT_SOURCE_3"] = st.number_input("EXT_SOURCE_3", min_value=0.0, max_value=1.0, step=0.01)
-    input_data["AMT_INCOME_TOTAL"] = st.number_input("AMT_INCOME_TOTAL", min_value=0.0, step=100.0)
-    input_data["AMT_CREDIT"] = st.number_input("AMT_CREDIT", min_value=0.0, step=100.0)
-    input_data["DAYS_BIRTH"] = st.number_input("DAYS_BIRTH (négatif)", value=-10000, step=1)
+    input_data["DAYS_BIRTH"] = st.number_input("DAYS_BIRTH", min_value=0.0, max_value=1.0, step=0.01)
+    input_data["AMT_CREDIT"] = st.number_input("AMT_CREDIT", min_value=0.0, max_value=1000000.0, step=0.01)
+    input_data["AMT_ANNUITY"] = st.number_input("AMT_ANNUITY", min_value=0.0, max_value=10000.0, step=0.01)
+    input_data["DAYS_ID_PUBLISH"] = st.number_input("DAYS_ID_PUBLISH", min_value=0.0,max_value=1000000.0, step=100.0)
+    input_data["DAYS_EMPLOYED"] = st.number_input("DAYS_EMPLOYED", min_value=0.0, max_value=1000000.0, step=100.0)
+    input_data["AMT_GOODS_PRICE"] = st.number_input("AMT_GOODS_PRICE", min_value=0.0, max_value=1000000.0, step=100.0)
+    input_data["DAYS_REGISTRATION"] = st.number_input("DAYS_REGISTRATION", min_value=0.0, max_value=1000000.0, step=100.0)
+    input_data["AMT_INCOME_TOTAL"] = st.number_input("AMT_INCOME_TOTAL", min_value=0.0, max_value = 1000000.0, step=100.0)
+    input_data["CNT_CHILDREN"] = st.number_input("CNT_CHILDREN", min_value=0.0, max_value = 20, step = 1.0)
 
     threshold = st.slider("⚖️ Choisir le seuil de refus", 0.0, 1.0, 0.5, 0.01)
 
