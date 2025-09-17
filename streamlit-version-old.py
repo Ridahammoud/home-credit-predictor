@@ -74,9 +74,9 @@ with tab2:
     st.header("🔮 Saisir manuellement les données client")
 
     input_data = {}
-    input_data["DAYS_BIRTH"] = st.number_input("DAYS_BIRTH", min_value=0.0, max_value=1.0, step=0.01)
-    input_data["AMT_CREDIT"] = st.number_input("AMT_CREDIT", min_value=0.0, max_value=1000000.0, step=0.01)
-    input_data["AMT_ANNUITY"] = st.number_input("AMT_ANNUITY", min_value=0.0, max_value=10000.0, step=0.01)
+    input_data["DAYS_BIRTH"] = st.number_input("DAYS_BIRTH", min_value=0.0, max_value=99999.0, step=1.0)
+    input_data["AMT_CREDIT"] = st.number_input("AMT_CREDIT", min_value=0.0, max_value=1000000.0, step=100.0)
+    input_data["AMT_ANNUITY"] = st.number_input("AMT_ANNUITY", min_value=0.0, max_value=1000000.0, step=100.0)
     input_data["DAYS_ID_PUBLISH"] = st.number_input("DAYS_ID_PUBLISH", min_value=0.0,max_value=1000000.0, step=100.0)
     input_data["DAYS_EMPLOYED"] = st.number_input("DAYS_EMPLOYED", min_value=0.0, max_value=1000000.0, step=100.0)
     input_data["AMT_GOODS_PRICE"] = st.number_input("AMT_GOODS_PRICE", min_value=0.0, max_value=1000000.0, step=100.0)
