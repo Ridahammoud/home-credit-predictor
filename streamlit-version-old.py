@@ -67,6 +67,17 @@ with tab1:
     st.header("📂 Les Features Importances ")
     fi = pd.read_csv('feature_importances.csv')
     st.dataframe(fi.head(10))
+    import plotly.express as px
+    top_features = fi.head(10)
+    fig = px.bar(
+        top_features,
+        x="importance",
+        y="feature",
+        orientation="h",
+        title="Top 10 des variables les plus importantes (globales)",
+        labels={"importance": "Importance", "feature": "Variable"}
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
 # Page 2 : Prédiction manuelle
 
