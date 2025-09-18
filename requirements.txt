@@ -13,3 +13,4 @@ joblib
 requests
 plotly.express
 shap
+numpy
