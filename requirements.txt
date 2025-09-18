@@ -12,3 +12,4 @@ imblearn
 joblib
 requests
 plotly.express
+shap
