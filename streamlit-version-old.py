@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 from predict_model import HomeCreditPredictor
+import shap
+import plotly.express as px
 
 # Initialisation du prédicteur
 
@@ -67,7 +69,7 @@ with tab1:
     st.header("📂 Les Features Importances ")
     fi = pd.read_csv('feature_importances.csv')
     st.dataframe(fi.head(10))
-    import plotly.express as px
+
     top_features = fi.head(10)
     fig = px.bar(
         top_features,
@@ -119,7 +121,6 @@ with tab2:
 
         except Exception as e:
             st.error(f"❌ Erreur lors de la prédiction : {e}")
-            import shap
 
     # Explication d’un seul client
     explainer = shap.TreeExplainer(predictor.predict_single)   # mon modèl lightgbm
