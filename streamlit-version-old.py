@@ -119,3 +119,28 @@ with tab2:
 
         except Exception as e:
             st.error(f"❌ Erreur lors de la prédiction : {e}")
+            import shap
+
+    # Explication d’un seul client
+    explainer = shap.TreeExplainer(predictor.model)   # ton modèle LightGBM
+    client_data = pd.DataFrame([input_data])         # un seul client
+
+    shap_values = explainer.shap_values(client_data)
+
+    st.subheader("🌟 Explication locale de la prédiction")
+    shap.force_plot(
+        explainer.expected_value[1],
+        shap_values[1][0,:],
+        client_data,
+        matplotlib=True
+    )
+    st.pyplot(bbox_inches='tight')
+    top_influencers = pd.Series(shap_values[1][0,:], index=client_data.columns).sort_values(key=abs, ascending=False).head(3)
+
+    explication = "Les facteurs qui influencent le plus cette prédiction sont : "
+    for var, val in top_influencers.items():
+        sens = "augmentent" if val > 0 else "diminuent"
+        explication += f"**{var}** ({sens} le risque), "
+    st.markdown(explication.rstrip(", "))
+
+
