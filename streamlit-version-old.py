@@ -136,7 +136,7 @@ with tab2:
     st.subheader("🌟 Explication locale de la prédiction")
     shap.force_plot(
         explainer.expected_value[1],
-        shap_values[1][0,:],
+        shap_values[0,:],
         client_data,
         matplotlib=True
     )
