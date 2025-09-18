@@ -122,11 +122,16 @@ with tab2:
         except Exception as e:
             st.error(f"❌ Erreur lors de la prédiction : {e}")
 
+    
+    # Construire un DataFrame avec les données du client
+    client_data = pd.DataFrame([input_data]) # un seul client
     # Explication d’un seul client
     explainer = shap.TreeExplainer(predictor.model)   # mon modèl lightgbm
-    client_data = pd.DataFrame([input_data])         # un seul client
+    
+    # Appliquer le preprocessing (OHE + alignement + imputation)
+    X_client = predictor.preprocess(client_data)
 
-    shap_values = explainer.shap_values(client_data)
+    shap_values = explainer.shap_values(X_client)
 
     st.subheader("🌟 Explication locale de la prédiction")
     shap.force_plot(
