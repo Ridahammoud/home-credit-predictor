@@ -122,7 +122,7 @@ with tab2:
             import shap
 
     # Explication d’un seul client
-    explainer = shap.TreeExplainer(predictor.model)   # ton modèle LightGBM
+    explainer = shap.TreeExplainer(predictor.predict_single)   # mon modèl lightgbm
     client_data = pd.DataFrame([input_data])         # un seul client
 
     shap_values = explainer.shap_values(client_data)
