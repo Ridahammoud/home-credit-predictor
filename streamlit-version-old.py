@@ -123,7 +123,7 @@ with tab2:
             st.error(f"❌ Erreur lors de la prédiction : {e}")
 
     # Explication d’un seul client
-    explainer = shap.TreeExplainer(predictor.predict_single)   # mon modèl lightgbm
+    explainer = shap.TreeExplainer(predictor.model_path)   # mon modèl lightgbm
     client_data = pd.DataFrame([input_data])         # un seul client
 
     shap_values = explainer.shap_values(client_data)
