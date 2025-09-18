@@ -158,7 +158,7 @@ with tab2:
     st.plotly_chart(fig, use_container_width=True)
 
     # explication local des features les plus influenceurs sur la prédiction
-    top_influencers = pd.Series(shap_values[1][0,:], index=client_data.columns).sort_values(key=abs, ascending=False).head(3)
+    top_influencers = pd.Series(shap_values[0,:], index=client_data.columns).sort_values(key=abs, ascending=False).head(3)
 
     explication = "Les facteurs qui influencent le plus cette prédiction sont : "
     for var, val in top_influencers.items():
