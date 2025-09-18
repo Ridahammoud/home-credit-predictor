@@ -3,6 +3,7 @@ import pandas as pd
 from predict_model import HomeCreditPredictor
 import shap
 import plotly.express as px
+import numpy as np
 
 # Initialisation du prédicteur
 
