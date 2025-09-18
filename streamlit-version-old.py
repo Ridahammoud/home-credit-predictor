@@ -145,19 +145,20 @@ with tab2:
 
     # Trier par importance absolue
     shap_df["abs_value"] = np.abs(shap_df["shap_value"])
-    shap_df = shap_df.sort_values("abs_value", ascending=False).head(10)
+    shap_df = shap_df.sort_values("abs_value", ascending=False).head(5)
 
     fig = px.bar(
         shap_df,
         x="shap_value",
         y="feature",
         orientation="h",
-        title="Top 10 des variables qui influencent la prédiction du client",
+        title="Top 5 des variables qui influencent la prédiction du client",
         labels={"shap_value": "Impact sur le risque", "feature": "Variable"}
     )
     st.plotly_chart(fig, use_container_width=True)
 
-    # explication local des features les plus influenceurs sur la prédiction
+    # shap_values alignés avec les features
+    shap_values = explainer.shap_values(X_client)
     top_influencers = pd.Series(shap_values[0,:], index=client_data.columns).sort_values(key=abs, ascending=False).head(3)
 
     explication = "Les facteurs qui influencent le plus cette prédiction sont : "
