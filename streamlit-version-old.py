@@ -134,13 +134,29 @@ with tab2:
     shap_values = explainer.shap_values(X_client)
 
     st.subheader("🌟 Explication locale de la prédiction")
-    shap.force_plot(
-        explainer.expected_value,
-        shap_values[0,:],
-        client_data,
-        matplotlib=True
+    # shap_values est un np.array 2D
+    shap_values_client = shap_values[0]
+
+    shap_df = pd.DataFrame({
+        "feature": predictor.feature_names,
+        "shap_value": shap_values_client
+    })
+
+    # Trier par importance absolue
+    shap_df["abs_value"] = np.abs(shap_df["shap_value"])
+    shap_df = shap_df.sort_values("abs_value", ascending=False).head(10)
+
+    fig = px.bar(
+        shap_df,
+        x="shap_value",
+        y="feature",
+        orientation="h",
+        title="Top 10 des variables qui influencent la prédiction du client",
+        labels={"shap_value": "Impact sur le risque", "feature": "Variable"}
     )
-    st.pyplot(bbox_inches='tight')
+    st.plotly_chart(fig, use_container_width=True)
+
+    # explication local des features les plus influenceurs sur la prédiction
     top_influencers = pd.Series(shap_values[1][0,:], index=client_data.columns).sort_values(key=abs, ascending=False).head(3)
 
     explication = "Les facteurs qui influencent le plus cette prédiction sont : "
