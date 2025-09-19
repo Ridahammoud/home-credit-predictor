@@ -161,7 +161,7 @@ with tab2:
     if isinstance(shap_values, list):
         shap_client = shap_values[1][0, :]  # classe 1 (défaut)
     else:
-        shap_client = shap_values[0, :]     # binaire → matrice
+        shap_client = shap_values[0, :]     # binaire
 
     # DataFrame avec toutes les contributions SHAP
     shap_df = pd.DataFrame({
@@ -201,6 +201,7 @@ with tab2:
     ax.axvline(0, color="black", linewidth=0.8)
 
     # Accessibilité : contraste élevé, suppression des bordures inutiles
+    
     for spine in ax.spines.values():
         spine.set_visible(False)
     ax.tick_params(axis='both', labelsize=10)
