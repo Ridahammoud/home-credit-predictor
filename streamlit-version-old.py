@@ -162,10 +162,11 @@ with tab2:
     explainer = shap.TreeExplainer(predictor.model)
     shap_values = explainer.shap_values(X_client)
     # on prend les contributions de la classe 1 (défaut)
-    shap_client = shap_values[1][0, :]  
+    shap_client = shap_values[1, :]  
     top_influencers = pd.Series(shap_client, index=client_data.columns) \
                     .sort_values(key=abs, ascending=False) \
                     .head(3)
+    
     explication = "Les facteurs qui influencent le plus cette prédiction sont : "
     for var, val in top_influencers.items():
         sens = "augmentent" if val > 0 else "diminuent"
