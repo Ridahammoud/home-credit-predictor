@@ -157,20 +157,59 @@ with tab2:
     )
     st.plotly_chart(fig, use_container_width=True)
 
-    # shap_values alignés avec les features
-    X_client = predictor.preprocess(client_data)
-    explainer = shap.TreeExplainer(predictor.model)
-    shap_values = explainer.shap_values(X_client)
-    # on prend les contributions de la classe 1 (défaut)
-    shap_client = shap_values[1, :]  
-    top_influencers = pd.Series(shap_client, index=client_data.columns) \
-                    .sort_values(key=abs, ascending=False) \
-                    .head(3)
-    
+    # Gestion robuste selon structure shap_values (liste ou array)
+    if isinstance(shap_values, list):
+        shap_client = shap_values[1][0, :]  # classe 1 (défaut)
+    else:
+        shap_client = shap_values[0, :]     # binaire → matrice
+
+    # DataFrame avec toutes les contributions SHAP
+    shap_df = pd.DataFrame({
+        "feature": predictor.feature_names,
+        "shap_value": shap_client
+    })
+
+    # Trier par importance absolue et sélectionner top 5
+    shap_df["abs_value"] = np.abs(shap_df["shap_value"])
+    shap_df = shap_df.sort_values("abs_value", ascending=False)
+
+    # --- Plotly barplot interactif
+    fig = px.bar(
+        shap_df.head(5),
+        x="shap_value",
+        y="feature",
+        orientation="h",
+        title="Top 5 des variables qui influencent la prédiction du client",
+        labels={"shap_value": "Impact sur le risque", "feature": "Variable"},
+        color="shap_value",
+        color_continuous_scale=["#1565C0", "#D32F2F"]  # bleu foncé ↔ rouge foncé
+    )
+    fig.update_layout(coloraxis_showscale=False)  # pas besoin de légende continue
+    st.plotly_chart(fig, use_container_width=True)
+
+    # --- Barplot Matplotlib (accessible WCAG)
+    import matplotlib.pyplot as plt
+
+    top_influencers = shap_df.head(3).set_index("feature")["shap_value"]
+
+    fig2, ax = plt.subplots(figsize=(6, 3))
+    colors = ["#D32F2F" if v > 0 else "#1565C0" for v in top_influencers.values]
+
+    ax.barh(top_influencers.index, top_influencers.values, color=colors)
+    ax.set_xlabel("Contribution SHAP (importance)", fontsize=10)
+    ax.set_title("Top 3 facteurs explicatifs", fontsize=12)
+    ax.axvline(0, color="black", linewidth=0.8)
+
+    # Accessibilité : contraste élevé, suppression des bordures inutiles
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+    ax.tick_params(axis='both', labelsize=10)
+
+    st.pyplot(fig2)
+
+    # --- Explication textuelle simple
     explication = "Les facteurs qui influencent le plus cette prédiction sont : "
     for var, val in top_influencers.items():
         sens = "augmentent" if val > 0 else "diminuent"
         explication += f"**{var}** ({sens} le risque), "
     st.markdown(explication.rstrip(", "))
-
-
