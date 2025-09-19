@@ -158,6 +158,8 @@ with tab2:
     st.plotly_chart(fig, use_container_width=True)
 
     # shap_values alignés avec les features
+    X_client = predictor.preprocess(client_data)
+    explainer = shap.TreeExplainer(predictor.model)
     shap_values = explainer.shap_values(X_client)
     top_influencers = pd.Series(shap_values[0,:], index=client_data.columns).sort_values(key=abs, ascending=False).head(3)
 
